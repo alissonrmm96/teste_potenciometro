@@ -205,49 +205,67 @@
         <div class="col-span-1 lg:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             
             <!-- LED 13 -->
-            <div class="saas-card rounded-3xl p-8 flex flex-col items-center justify-between gap-8 group">
-                <div class="w-full text-center">
-                    <span class="text-zinc-400 font-black text-lg tracking-widest uppercase">PORTA 13</span>
+            <div class="bg-[#1a1c29]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-6 flex flex-col gap-6 transition-all duration-300 hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] group">
+                <div class="flex justify-between items-center w-full">
+                    <span class="text-zinc-300 font-black text-sm tracking-widest uppercase">PORTA 13</span>
+                    <span id="badge1" class="bg-zinc-800 border border-zinc-700 text-zinc-400 text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap transition-all">INATIVO</span>
                 </div>
-                <div class="relative flex items-center justify-center w-32 h-32">
-                    <div class="led-ring"></div>
-                    <div id="led1" class="led-module led-off">
-                        <span id="status-txt-1" class="absolute -bottom-4 bg-zinc-900 border border-zinc-700 text-zinc-400 text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap z-20">INATIVO</span>
+                <div class="relative flex items-center justify-center w-full py-8">
+                    <!-- Outer dashed spinning ring -->
+                    <div class="absolute w-36 h-36 rounded-full border border-dashed border-zinc-700 animate-[spin_20s_linear_infinite] group-hover:border-cyan-500/30 transition-colors"></div>
+                    <!-- Inner solid ring -->
+                    <div class="absolute w-28 h-28 rounded-full border border-zinc-800"></div>
+                    <!-- Center LED -->
+                    <div id="led1" class="relative w-20 h-20 bg-[#18181b] rounded-full flex items-center justify-center led-off z-10 transition-all duration-500">
+                        <svg id="icon1" class="w-8 h-8 text-zinc-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
                     </div>
                 </div>
-                <button onclick="publishMessage('1')" class="w-full py-4 bg-zinc-800/80 hover:bg-zinc-700 border border-zinc-700 hover:border-cyan-500/50 rounded-2xl font-bold text-white transition-all active:scale-95 action-btn">
+                <button onclick="publishMessage('1')" class="action-btn w-full py-3.5 bg-[#232533] rounded-2xl font-bold text-zinc-300 flex items-center justify-center gap-2 transition-all duration-300 hover:bg-gradient-to-r hover:from-cyan-400 hover:to-blue-500 hover:text-white hover:shadow-[0_0_20px_rgba(0,240,255,0.5)] active:scale-95 border border-white/5 hover:border-transparent">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     LIGAR 13
                 </button>
             </div>
 
             <!-- LED 12 -->
-            <div class="saas-card rounded-3xl p-8 flex flex-col items-center justify-between gap-8 group">
-                <div class="w-full text-center">
-                    <span class="text-zinc-400 font-black text-lg tracking-widest uppercase">PORTA 12</span>
+            <div class="bg-[#1a1c29]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-6 flex flex-col gap-6 transition-all duration-300 hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] group">
+                <div class="flex justify-between items-center w-full">
+                    <span class="text-zinc-300 font-black text-sm tracking-widest uppercase">PORTA 12</span>
+                    <span id="badge2" class="bg-zinc-800 border border-zinc-700 text-zinc-400 text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap transition-all">INATIVO</span>
                 </div>
-                <div class="relative flex items-center justify-center w-32 h-32">
-                    <div class="led-ring"></div>
-                    <div id="led2" class="led-module led-off">
-                        <span id="status-txt-2" class="absolute -bottom-4 bg-zinc-900 border border-zinc-700 text-zinc-400 text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap z-20">INATIVO</span>
+                <div class="relative flex items-center justify-center w-full py-8">
+                    <!-- Outer dashed spinning ring -->
+                    <div class="absolute w-36 h-36 rounded-full border border-dashed border-zinc-700 animate-[spin_20s_linear_infinite] group-hover:border-cyan-500/30 transition-colors"></div>
+                    <!-- Inner solid ring -->
+                    <div class="absolute w-28 h-28 rounded-full border border-zinc-800"></div>
+                    <!-- Center LED -->
+                    <div id="led2" class="relative w-20 h-20 bg-[#18181b] rounded-full flex items-center justify-center led-off z-10 transition-all duration-500">
+                        <svg id="icon2" class="w-8 h-8 text-zinc-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
                     </div>
                 </div>
-                <button onclick="publishMessage('2')" class="w-full py-4 bg-zinc-800/80 hover:bg-zinc-700 border border-zinc-700 hover:border-cyan-500/50 rounded-2xl font-bold text-white transition-all active:scale-95 action-btn">
+                <button onclick="publishMessage('2')" class="action-btn w-full py-3.5 bg-[#232533] rounded-2xl font-bold text-zinc-300 flex items-center justify-center gap-2 transition-all duration-300 hover:bg-gradient-to-r hover:from-cyan-400 hover:to-blue-500 hover:text-white hover:shadow-[0_0_20px_rgba(0,240,255,0.5)] active:scale-95 border border-white/5 hover:border-transparent">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     LIGAR 12
                 </button>
             </div>
 
             <!-- LED 11 -->
-            <div class="saas-card rounded-3xl p-8 flex flex-col items-center justify-between gap-8 group">
-                <div class="w-full text-center">
-                    <span class="text-zinc-400 font-black text-lg tracking-widest uppercase">PORTA 11</span>
+            <div class="bg-[#1a1c29]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-6 flex flex-col gap-6 transition-all duration-300 hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] group">
+                <div class="flex justify-between items-center w-full">
+                    <span class="text-zinc-300 font-black text-sm tracking-widest uppercase">PORTA 11</span>
+                    <span id="badge3" class="bg-zinc-800 border border-zinc-700 text-zinc-400 text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap transition-all">INATIVO</span>
                 </div>
-                <div class="relative flex items-center justify-center w-32 h-32">
-                    <div class="led-ring"></div>
-                    <div id="led3" class="led-module led-off">
-                        <span id="status-txt-3" class="absolute -bottom-4 bg-zinc-900 border border-zinc-700 text-zinc-400 text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap z-20">INATIVO</span>
+                <div class="relative flex items-center justify-center w-full py-8">
+                    <!-- Outer dashed spinning ring -->
+                    <div class="absolute w-36 h-36 rounded-full border border-dashed border-zinc-700 animate-[spin_20s_linear_infinite] group-hover:border-cyan-500/30 transition-colors"></div>
+                    <!-- Inner solid ring -->
+                    <div class="absolute w-28 h-28 rounded-full border border-zinc-800"></div>
+                    <!-- Center LED -->
+                    <div id="led3" class="relative w-20 h-20 bg-[#18181b] rounded-full flex items-center justify-center led-off z-10 transition-all duration-500">
+                        <svg id="icon3" class="w-8 h-8 text-zinc-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
                     </div>
                 </div>
-                <button onclick="publishMessage('3')" class="w-full py-4 bg-zinc-800/80 hover:bg-zinc-700 border border-zinc-700 hover:border-cyan-500/50 rounded-2xl font-bold text-white transition-all active:scale-95 action-btn">
+                <button onclick="publishMessage('3')" class="action-btn w-full py-3.5 bg-[#232533] rounded-2xl font-bold text-zinc-300 flex items-center justify-center gap-2 transition-all duration-300 hover:bg-gradient-to-r hover:from-cyan-400 hover:to-blue-500 hover:text-white hover:shadow-[0_0_20px_rgba(0,240,255,0.5)] active:scale-95 border border-white/5 hover:border-transparent">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     LIGAR 11
                 </button>
             </div>
@@ -277,16 +295,19 @@
 
         function updateLedUI(ledNum, isOn) {
             const led = document.getElementById('led' + ledNum);
-            const text = document.getElementById('status-txt-' + ledNum);
+            const badge = document.getElementById('badge' + ledNum);
+            const icon = document.getElementById('icon' + ledNum);
             
             if (isOn) {
                 led.classList.replace('led-off', 'led-on');
-                text.innerText = "SISTEMA ONLINE";
-                text.className = "absolute -bottom-4 bg-purple-900/80 border border-purple-500 text-white shadow-[0_0_10px_rgba(168,85,247,0.5)] text-[10px] font-bold px-4 py-1.5 rounded-full whitespace-nowrap z-20 transition-all";
+                badge.innerText = "ATIVO";
+                badge.className = "bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap transition-all shadow-[0_0_10px_rgba(6,182,212,0.3)]";
+                icon.className = "w-8 h-8 text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] transition-colors duration-300";
             } else {
                 led.classList.replace('led-on', 'led-off');
-                text.innerText = "INATIVO";
-                text.className = "absolute -bottom-4 bg-zinc-900 border border-zinc-700 text-zinc-400 text-[10px] font-bold px-4 py-1.5 rounded-full whitespace-nowrap z-20 transition-all";
+                badge.innerText = "INATIVO";
+                badge.className = "bg-zinc-800 border border-zinc-700 text-zinc-400 text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap transition-all";
+                icon.className = "w-8 h-8 text-zinc-600 transition-colors duration-300";
             }
         }
 
