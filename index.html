@@ -1,1 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Iluminação IoT</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Paho MQTT -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ffe6e6 0%, #f0f4f8 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .led-off {
+            background-color: #e5e7eb;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .led-on {
+            background-color: #00f0ff;
+            box-shadow: 0 0 20px 5px rgba(0, 240, 255, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center font-sans p-4">
 
+    <!-- Card Principal -->
+    <div class="glass-card rounded-2xl shadow-xl p-8 w-full max-w-3xl text-center">
+        
+        <!-- Cabeçalho -->
+        <h1 class="text-3xl font-bold text-red-600 mb-2 tracking-tight">Central de Iluminação IoT – 3 LEDs</h1>
+        <p class="text-gray-600 font-medium mb-6">Controle de Hardware - Porta 13, Porta 12, Porta 11</p>
+
+        <!-- Status de Rede -->
+        <div id="status-pill" class="inline-flex items-center px-4 py-2 rounded-full bg-yellow-100 text-yellow-700 font-semibold text-sm transition-all duration-500 mb-6 border border-yellow-200">
+            <span id="status-indicator" class="w-2.5 h-2.5 rounded-full bg-yellow-500 mr-2 animate-pulse"></span>
+            <span id="status-text">Sincronizando...</span>
+        </div>
+
+        <!-- Input do Tópico -->
+        <div class="mb-8">
+            <label class="block text-sm font-medium text-gray-600 mb-1">Tópico MQTT</label>
+            <input type="text" id="topic-input" value="Alisson_Martins_led_exclusivo/arduino" 
+                class="w-full md:w-2/3 mx-auto px-4 py-2 rounded-lg border border-gray-300 bg-white/80 focus:ring-2 focus:ring-red-400 focus:outline-none text-center text-gray-700 transition-shadow">
+        </div>
+
+        <!-- Simulador dos LEDs -->
+        <div class="grid grid-cols-3 gap-6 mb-10">
+            <div class="flex flex-col items-center">
+                <p class="text-sm font-semibold text-gray-600 mb-3">Porta 13</p>
+                <div id="led1" class="w-16 h-16 rounded-full led-off transition-all duration-300"></div>
+                <p id="led1-text" class="text-xs text-gray-500 mt-3 font-medium">Dispositivo Inativo</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <p class="text-sm font-semibold text-gray-600 mb-3">Porta 12</p>
+                <div id="led2" class="w-16 h-16 rounded-full led-off transition-all duration-300"></div>
+                <p id="led2-text" class="text-xs text-gray-500 mt-3 font-medium">Dispositivo Inativo</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <p class="text-sm font-semibold text-gray-600 mb-3">Porta 11</p>
+                <div id="led3" class="w-16 h-16 rounded-full led-off transition-all duration-300"></div>
+                <p id="led3-text" class="text-xs text-gray-500 mt-3 font-medium">Dispositivo Inativo</p>
+            </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="flex flex-wrap justify-center gap-4">
+            <button onclick="publishMessage('1')" class="action-btn px-5 py-2.5 bg-emerald-400 hover:bg-emerald-500 text-white font-semibold rounded-lg shadow-md active:scale-95 transition-all opacity-50 cursor-not-allowed">LIGAR LED 01</button>
+            <button onclick="publishMessage('2')" class="action-btn px-5 py-2.5 bg-emerald-400 hover:bg-emerald-500 text-white font-semibold rounded-lg shadow-md active:scale-95 transition-all opacity-50 cursor-not-allowed">LIGAR LED 02</button>
+            <button onclick="publishMessage('3')" class="action-btn px-5 py-2.5 bg-emerald-400 hover:bg-emerald-500 text-white font-semibold rounded-lg shadow-md active:scale-95 transition-all opacity-50 cursor-not-allowed">LIGAR LED 03</button>
+            <button onclick="publishMessage('4')" class="action-btn px-5 py-2.5 bg-blue-400 hover:bg-blue-500 text-white font-semibold rounded-lg shadow-md active:scale-95 transition-all opacity-50 cursor-not-allowed">LIGAR TODOS</button>
+            <button onclick="publishMessage('0')" class="action-btn px-5 py-2.5 bg-red-400 hover:bg-red-500 text-white font-semibold rounded-lg shadow-md active:scale-95 transition-all opacity-50 cursor-not-allowed">DESLIGAR</button>
+        </div>
+    </div>
+
+    <script>
+        const broker = "broker.hivemq.com";
+        const port = 8884;
+        const clientId = "web_" + Math.random().toString(16).substr(2, 8);
+        let currentTopic = document.getElementById("topic-input").value;
+        let mqttClient = new Paho.MQTT.Client(broker, port, clientId);
+        let isConnected = false;
+
+        function updateLedUI(ledId, textId, isOn) {
+            const led = document.getElementById(ledId);
+            const text = document.getElementById(textId);
+            if (isOn) {
+                led.classList.remove('led-off');
+                led.classList.add('led-on');
+                text.innerText = "Dispositivo Ativo";
+                text.classList.remove('text-gray-500');
+                text.classList.add('text-cyan-600');
+            } else {
+                led.classList.remove('led-on');
+                led.classList.add('led-off');
+                text.innerText = "Dispositivo Inativo";
+                text.classList.remove('text-cyan-600');
+                text.classList.add('text-gray-500');
+            }
+        }
+
+        mqttClient.onConnectionLost = function(responseObject) {
+            isConnected = false;
+            document.getElementById("status-pill").className = "inline-flex items-center px-4 py-2 rounded-full bg-red-100 text-red-700 font-semibold text-sm transition-colors duration-500 mb-6 border border-red-200";
+            document.getElementById("status-indicator").className = "w-2.5 h-2.5 rounded-full bg-red-500 mr-2";
+            document.getElementById("status-indicator").classList.remove('animate-pulse');
+            document.getElementById("status-text").innerText = "Sistema Offline";
+            toggleButtons(false);
+            
+            setTimeout(connectMQTT, 5000);
+        };
+
+        mqttClient.onMessageArrived = function(message) {
+            const payload = message.payloadString;
+            
+            if (payload === '1') {
+                updateLedUI('led1', 'led1-text', true);
+            } else if (payload === '2') {
+                updateLedUI('led2', 'led2-text', true);
+            } else if (payload === '3') {
+                updateLedUI('led3', 'led3-text', true);
+            } else if (payload === '4') {
+                updateLedUI('led1', 'led1-text', true);
+                updateLedUI('led2', 'led2-text', true);
+                updateLedUI('led3', 'led3-text', true);
+            } else if (payload === '0') {
+                updateLedUI('led1', 'led1-text', false);
+                updateLedUI('led2', 'led2-text', false);
+                updateLedUI('led3', 'led3-text', false);
+            }
+        };
+
+        function connectMQTT() {
+            mqttClient.connect({
+                useSSL: true,
+                onSuccess: function() {
+                    isConnected = true;
+                    document.getElementById("status-pill").className = "inline-flex items-center px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 font-semibold text-sm transition-colors duration-500 mb-6 border border-emerald-200";
+                    document.getElementById("status-indicator").className = "w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2";
+                    document.getElementById("status-indicator").classList.remove('animate-pulse');
+                    document.getElementById("status-text").innerText = "Sistema Online";
+                    
+                    mqttClient.subscribe(currentTopic);
+                    toggleButtons(true);
+                },
+                onFailure: function(e) {
+                    console.log("Falha na conexão: ", e);
+                    setTimeout(connectMQTT, 5000);
+                }
+            });
+        }
+
+        function toggleButtons(enable) {
+            const buttons = document.querySelectorAll('.action-btn');
+            buttons.forEach(btn => {
+                if (enable) {
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            });
+        }
+
+        function publishMessage(payload) {
+            if (isConnected) {
+                let message = new Paho.MQTT.Message(payload);
+                message.destinationName = currentTopic;
+                mqttClient.send(message);
+            }
+        }
+
+        document.getElementById("topic-input").addEventListener("change", function(e) {
+            const newTopic = e.target.value.trim();
+            if (isConnected && newTopic !== currentTopic && newTopic !== "") {
+                mqttClient.unsubscribe(currentTopic);
+                currentTopic = newTopic;
+                mqttClient.subscribe(currentTopic);
+            }
+        });
+
+        connectMQTT();
+    </script>
+</body>
+</html>
